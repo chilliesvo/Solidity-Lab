@@ -115,8 +115,7 @@ const config = {
     },
     exposed: {
         prefix: "$",
-        outDir: (process.env.EXPOSED_ON === "true") ? "contracts-exposed" : "",
-    },
+    }
 };
 
 module.exports = config;
