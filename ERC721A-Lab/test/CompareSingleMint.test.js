@@ -2,7 +2,7 @@ const { ethers } = require("hardhat");
 const { expect } = require("chai");
 const { ZERO_ADDRESS } = require("@openzeppelin/test-helpers/src/constants");
 
-describe("ERC721A", () => {
+describe("CompareSingleMint", () => {
     before(async () => {
         //** Get Wallets */
         const accounts = await ethers.getSigners();
