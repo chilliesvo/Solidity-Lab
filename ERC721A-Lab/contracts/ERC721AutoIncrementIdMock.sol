@@ -1,11 +1,9 @@
 pragma solidity ^0.8.4;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract Test721Enumerable is ERC721Enumerable {
+contract ERC721AutoIncrementIdMock is ERC721("Simple 721", "721") {
     uint256 public lastId;
-
-    constructor() ERC721("Simple", "721") {}
 
     function mint(address _to) external {
         _mint(_to, ++lastId);

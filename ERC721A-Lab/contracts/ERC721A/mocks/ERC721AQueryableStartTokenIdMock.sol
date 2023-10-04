@@ -4,8 +4,8 @@
 
 pragma solidity ^0.8.4;
 
-import './ERC721AQueryableMock.sol';
-import './StartTokenIdHelper.sol';
+import "./ERC721AQueryableMock.sol";
+import "./StartTokenIdHelper.sol";
 
 contract ERC721AQueryableStartTokenIdMock is StartTokenIdHelper, ERC721AQueryableMock {
     constructor(

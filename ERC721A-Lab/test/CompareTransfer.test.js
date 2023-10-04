@@ -10,14 +10,14 @@ describe("CompareTransfer", () => {
         [user1, user2, user3] = accounts;
 
         //** Get contracts deployed  */
-        const Test721A = await ethers.getContractFactory("Test721A");
-        erc721a = await Test721A.deploy();
+        const ERC721ASafeMock = await ethers.getContractFactory("ERC721ASafeMock");
+        erc721a = await ERC721ASafeMock.deploy();
 
-        const Test721AutoIncrementId = await ethers.getContractFactory("Test721AutoIncrementId");
-        erc721AutoIncrementId = await Test721AutoIncrementId.deploy();
+        const ERC721AutoIncrementIdMock = await ethers.getContractFactory("ERC721AutoIncrementIdMock");
+        erc721AutoIncrementId = await ERC721AutoIncrementIdMock.deploy();
 
-        // const Test721Enumerable = await ethers.getContractFactory("Test721Enumerable");
-        // erc721Enumerable = await Test721Enumerable.deploy();
+        // const ERC721EnumerableMock = await ethers.getContractFactory("ERC721EnumerableMock");
+        // erc721Enumerable = await ERC721EnumerableMock.deploy();
     });
 
     describe("Compare Gas Batch Mint", () => {
