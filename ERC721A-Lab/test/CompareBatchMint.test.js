@@ -40,38 +40,38 @@ describe("CompareBatchMint", () => {
 
         it("Batch mint 721", async () => {
             const tokenIds = genNumbersASC(1, 50);
-            let tx = await erc721.connect(user1).BatchMint(user1.address, tokenIds);
+            let tx = await erc721.connect(user1).batchMint(user1.address, tokenIds);
             tx = await tx.wait();
             console.log('tx.gasUsed :>> ', tx.gasUsed.toString());
         });
 
         it("Batch safeMint 721", async () => {
             const tokenIds = genNumbersASC(51, 100);
-            let tx = await erc721.connect(user1).BatchSafeMint(user1.address, tokenIds);
+            let tx = await erc721.connect(user1).batchSafeMint(user1.address, tokenIds);
             tx = await tx.wait();
             console.log('tx.gasUsed :>> ', tx.gasUsed.toString());
         });
 
         it("Batch mint 721AutoIncrementId", async () => {
-            let tx = await erc721AutoIncrementId.connect(user1).BatchMint(user1.address, 50);
+            let tx = await erc721AutoIncrementId.connect(user1).batchMint(user1.address, 50);
             tx = await tx.wait();
             console.log('tx.gasUsed :>> ', tx.gasUsed.toString());
         });
 
         it("Batch safeMint 721AutoIncrementId", async () => {
-            let tx = await erc721AutoIncrementId.connect(user1).BatchSafeMint(user1.address, 50);
+            let tx = await erc721AutoIncrementId.connect(user1).batchSafeMint(user1.address, 50);
             tx = await tx.wait();
             console.log('tx.gasUsed :>> ', tx.gasUsed.toString());
         });
 
         it("Batch mint 721Enumerable", async () => {
-            let tx = await erc721Enumerable.connect(user1).BatchMint(user1.address, 50);
+            let tx = await erc721Enumerable.connect(user1).batchMint(user1.address, 50);
             tx = await tx.wait();
             console.log('tx.gasUsed :>> ', tx.gasUsed.toString());
         });
 
         it("Batch safeMint 721Enumerable", async () => {
-            let tx = await erc721Enumerable.connect(user1).BatchSafeMint(user1.address, 50);
+            let tx = await erc721Enumerable.connect(user1).batchSafeMint(user1.address, 50);
             tx = await tx.wait();
             console.log('tx.gasUsed :>> ', tx.gasUsed.toString());
         });

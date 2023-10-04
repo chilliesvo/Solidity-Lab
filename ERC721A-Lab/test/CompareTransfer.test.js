@@ -65,7 +65,7 @@ describe("CompareTransfer", () => {
         });
 
         it("Batch mint 721AutoIncrementId", async () => {
-            let tx = await erc721AutoIncrementId.connect(user1).BatchMint(user1.address, 500);
+            let tx = await erc721AutoIncrementId.connect(user1).batchMint(user1.address, 500);
             tx = await tx.wait();
             console.log('tx.gasUsed :>> ', tx.gasUsed.toString());
         });
@@ -89,7 +89,7 @@ describe("CompareTransfer", () => {
         });
 
         // it("Batch mint 721Enumerable", async () => {
-        //     let tx = await erc721Enumerable.connect(user1).BatchMint(user1.address, 50);
+        //     let tx = await erc721Enumerable.connect(user1).batchMint(user1.address, 50);
         //     tx = await tx.wait();
         //     console.log('tx.gasUsed :>> ', tx.gasUsed.toString());
         // });
