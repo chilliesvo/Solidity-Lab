@@ -3,15 +3,16 @@
   "main": "hardhat.config.js",
   "scripts": {
     "test": "hh test",
-    "test-coverage": "hh coverage --testfiles 'test/**/*.test.js'",
-    "test-integration": "hh test test/integration/*.test.js",
-    "deploy-local": "hh run scripts/deploy.js --network localhost",
+    "test:gas": "REPORT_GAS=true hh test",
+    "test:gas:export": "REPORT_GAS=true EXPORT_GAS=true hh test",
+    "coverage": "REPORT_COVERAGE=true hh coverage --testfiles 'test/**/*.test.js'",
+    "deploy:dev": "hh run scripts/deploy.js --network localhost",
     "lint": "solhint 'contracts/*.sol'",
     "lint:fix": "solhint 'contracts/**/*.sol' --fix",
     "format": "prettier --write .",
     "clean": "hh clean && rm -rf contracts-exposed",
-    "compile": "hh compile",
-    "contract-size": "yarn run hardhat size-contracts",
+    "compile:exposed": "EXPOSED=true hh compile",
+    "report:size": "hh size-contracts",
     "slither": "slither . --solc-remaps '@openzeppelin=node_modules/@openzeppelin @chainlink=node_modules/@chainlink' --exclude naming-convention,external-function,low-level-calls"
   },
   "dependencies": {

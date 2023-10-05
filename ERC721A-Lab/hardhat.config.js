@@ -1,10 +1,6 @@
 // Loading env configs for deploying and public contract source
 require("dotenv").config();
 
-// Solidity compile
-require("solidity-coverage");
-
-require("hardhat-contract-sizer");
 
 // Using hardhat-ethers plugin for deploying
 // See here: https://hardhat.org/plugins/nomiclabs-hardhat-ethers.html
@@ -24,11 +20,20 @@ require("@nomiclabs/hardhat-etherscan");
 
 require("@openzeppelin/hardhat-upgrades");
 
-// Report gas
-require("hardhat-gas-reporter");
+require("hardhat-contract-sizer");
 
-// Expose internal functions for smart contract testing
-require("hardhat-exposed");
+if (process.env.REPORT_GAS) {
+    require("hardhat-gas-reporter");
+}
+
+if (process.env.EXPOSED) {
+    // Expose internal functions for smart contract testing
+    require("hardhat-exposed");
+}
+
+if (process.env.REPORT_COVERAGE) {
+    require("solidity-coverage");
+}
 
 // This plugin adds ways to ignore Solidity warnings
 require("hardhat-ignore-warnings");
@@ -93,7 +98,7 @@ const config = {
     contractSizer: {
         alphaSort: true,
         disambiguatePaths: false,
-        runOnCompile: (process.env.REPORT_SIZE === "true") ? true : false,
+        runOnCompile: false,
         strict: true,
     },
     mocha: {
@@ -105,12 +110,12 @@ const config = {
         },
     },
     gasReporter: {
-        enabled: (process.env.REPORT_GAS === "true") ? true : false,
+        enabled: process.env.REPORT_GAS ? true : false,
         currency: "USD",
         token: "ETH",
         noColors: true, //optional
         gasPrice: 10, //gwei
-        outputFile: (process.env.EXPORT_REPORT_GAS === "true") ? "gas-report.txt" : "", //optional
+        outputFile: process.env.EXPORT_GAS ? "gas-report.txt" : "", //optional
         coinmarketcap: process.env.COIN_MARKET_API,
     },
     exposed: {
