@@ -13,6 +13,9 @@ describe("CompareBatchMint", () => {
         const ERC721ASafeMock = await ethers.getContractFactory("ERC721ASafeMock");
         erc721a = await ERC721ASafeMock.deploy();
 
+        const ERC721AQueryable = await ethers.getContractFactory("ERC721AQueryableStartTokenIdMock");
+        erc721AQueryable = await ERC721AQueryable.deploy('Azuki', 'AZUKI', 1);
+
         const ERC721Mock = await ethers.getContractFactory("ERC721Mock");
         erc721 = await ERC721Mock.deploy();
 
