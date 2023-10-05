@@ -29,14 +29,20 @@ describe("CompareBatchMint", () => {
     });
 
     describe("Compare Gas Batch Mint", () => {
-        it("Batch mint 721a", async () => {
+        it("Batch mint 721A", async () => {
             let tx = await erc721a.connect(user1).mint(user1.address, 50);
             tx = await tx.wait();
             console.log('tx.gasUsed :>> ', tx.gasUsed.toString());
         });
 
-        it("Batch safeMint 721a", async () => {
+        it("Batch safeMint 721A", async () => {
             let tx = await erc721a.connect(user1).safeMint(user1.address, 50);
+            tx = await tx.wait();
+            console.log('tx.gasUsed :>> ', tx.gasUsed.toString());
+        });
+
+        it("Batch safeMint 721AQueryable", async () => {
+            let tx = await erc721AQueryable.connect(user1).safeMint(user1.address, 50);
             tx = await tx.wait();
             console.log('tx.gasUsed :>> ', tx.gasUsed.toString());
         });
