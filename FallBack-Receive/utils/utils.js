@@ -7,9 +7,6 @@ const keccak256 = require("keccak256");
 const { BigNumber } = ethers;
 const clc = require("cli-color");
 
-const TEN_MINUTES = 600;
-const ONE_DAY = 86400;
-
 const blockTimestamp = async () => {
     return (await ethers.provider.getBlock()).timestamp;
 };
@@ -235,13 +232,11 @@ async function getEvent(tx, eventName) {
         .map((eventArg) => {
             eventObject[eventArg] = eventArgs[eventArg];
         });
-    return eventObject;
+    return [eventArgs, eventObject];
 }
 
 module.exports = {
     ZERO_ADDRESS,
-    TEN_MINUTES,
-    ONE_DAY,
     blockTimestamp,
     skipTime,
     setTime,
