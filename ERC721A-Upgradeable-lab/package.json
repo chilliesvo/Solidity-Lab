@@ -17,12 +17,15 @@
     "lint:sol": "prettier --write \"contracts/**/*.sol\""
   },
   "devDependencies": {
-    "@openzeppelin/contracts": "^4.4.2",
+    "@gnus.ai/upgrade-safe-transpiler-diamond": "latest",
     "@nomiclabs/hardhat-ethers": "^2.0.4",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@openzeppelin/contracts": "^4.4.2",
+    "@openzeppelin/contracts-upgradeable": "4.8.2",
+    "@openzeppelin/hardhat-upgrades": "1.22.1",
     "@openzeppelin/test-helpers": "^0.5.15",
-    "@gnus.ai/upgrade-safe-transpiler-diamond": "latest",
     "chai": "^4.3.4",
+    "erc721a-upgradeable": "^4.2.3",
     "eslint": "^8.7.0",
     "eslint-plugin-mocha": "^10.0.3",
     "eslint-plugin-node": "^11.1.0",

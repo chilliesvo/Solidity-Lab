@@ -23,7 +23,7 @@ internalTask(TASK_COMPILE_SOLIDITY_GET_COMPILER_INPUT, async (args, hre, runSupe
  */
 module.exports = {
   solidity: {
-    version: '0.8.11',
+    version: '0.8.16',
     settings: {
       optimizer: {
         enabled: true,

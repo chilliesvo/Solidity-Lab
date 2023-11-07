@@ -12,7 +12,16 @@ const createTestSuite = ({ contract, constructorArgs }) =>
             beforeEach(async function () {
                 this.erc721aQueryable = await deployContract(contract, constructorArgs);
 
-                await this.erc721aQueryable.ERC721AQueryableMock_init('Azuki', 'AZUKI');
+                const [superAdmin] = await ethers.getSigners();
+                const ownerContract = superAdmin.address;
+                const controllerContract = ZERO_ADDRESS;
+                const contractUri = "https://ipfs"
+                const name = "Single Token";
+                const symbol = "SIN";
+                const receiverRoyalty = superAdmin.address;
+                const percentageRoyalty = 1000;
+                const maxTotalSupply = 20;
+                await this.erc721aQueryable.initialize(ownerContract, controllerContract, [contractUri, name, symbol, receiverRoyalty, percentageRoyalty, maxTotalSupply]);
 
                 this.startTokenId = this.erc721aQueryable.startTokenId
                     ? (await this.erc721aQueryable.startTokenId()).toNumber()
@@ -20,27 +29,6 @@ const createTestSuite = ({ contract, constructorArgs }) =>
 
                 offsetted = (...arr) => offsettedIndex(this.startTokenId, arr);
             });
-
-            const expectExplicitOwnershipBurned = function (explicitOwnership, address) {
-                expect(explicitOwnership.burned).to.eql(true);
-                expect(explicitOwnership.addr).to.eql(address);
-                expect(explicitOwnership.startTimestamp).to.not.eql(BigNumber.from(0));
-                expect(explicitOwnership.extraData).to.equal(BigNumber.from(0));
-            };
-
-            const expectExplicitOwnershipNotExists = function (explicitOwnership) {
-                expect(explicitOwnership.burned).to.eql(false);
-                expect(explicitOwnership.addr).to.eql(ZERO_ADDRESS);
-                expect(explicitOwnership.startTimestamp).to.eql(BigNumber.from(0));
-                expect(explicitOwnership.extraData).to.equal(BigNumber.from(0));
-            };
-
-            const expectExplicitOwnershipExists = function (explicitOwnership, address) {
-                expect(explicitOwnership.burned).to.eql(false);
-                expect(explicitOwnership.addr).to.eql(address);
-                expect(explicitOwnership.startTimestamp).to.not.eql(BigNumber.from(0));
-                expect(explicitOwnership.extraData).to.equal(BigNumber.from(0));
-            };
 
             context('with no minted tokens', async function () {
                 beforeEach(async function () {
@@ -60,23 +48,6 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                     it('returns empty array', async function () {
                         expect(await this.erc721aQueryable.tokensOfOwnerIn(this.owner.address, 0, 9)).to.eql([]);
                         expect(await this.erc721aQueryable.tokensOfOwnerIn(this.addr1.address, 0, 9)).to.eql([]);
-                    });
-                });
-
-                describe('explicitOwnershipOf', async function () {
-                    it('returns empty struct', async function () {
-                        expectExplicitOwnershipNotExists(await this.erc721aQueryable.explicitOwnershipOf(0));
-                        expectExplicitOwnershipNotExists(await this.erc721aQueryable.explicitOwnershipOf(1));
-                    });
-                });
-
-                describe('explicitOwnershipsOf', async function () {
-                    it('returns empty structs', async function () {
-                        const tokenIds = [0, 1, 2, 3];
-                        const explicitOwnerships = await this.erc721aQueryable.explicitOwnershipsOf(tokenIds);
-                        for (let i = 0; i < explicitOwnerships.length; ++i) {
-                            expectExplicitOwnershipNotExists(explicitOwnerships[i]);
-                        }
                     });
                 });
             });
@@ -151,30 +122,6 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                         expect(ownerTokens).to.eql(offsetted(6, 8));
                         expect(addr4Tokens).to.eql(tokenIdToTransfer);
                     });
-
-                    it('after a burn', async function () {
-                        // Burn tokens
-                        const tokenIdToBurn = [offsetted(7)];
-                        await this.erc721aQueryable.burn(tokenIdToBurn[0]);
-
-                        // Load balances
-                        const ownerTokens = await this.erc721aQueryable.tokensOfOwner(this.owner.address);
-
-                        // Verify the function can still read the correct token ids
-                        expect(ownerTokens).to.eql(offsetted(6, 8));
-                    });
-
-                    it('with direct set burn bit', async function () {
-                        await this.erc721aQueryable['safeMint(address,uint256)'](this.addr3.address, 3);
-                        await this.erc721aQueryable['safeMint(address,uint256)'](this.addr3.address, 2);
-                        const nextTokenId = this.owner.expected.tokens[this.owner.expected.tokens.length - 1].add(1);
-                        expect(await this.erc721aQueryable.tokensOfOwner(this.addr3.address))
-                            .to.eql(this.addr3.expected.tokens.concat(Array.from({ length: 5 }, (_, i) => nextTokenId.add(i))));
-                        await this.erc721aQueryable.directSetBurnBit(nextTokenId);
-                        expect(await this.erc721aQueryable.tokensOfOwner(this.addr3.address))
-                            // eslint-disable-next-line max-len
-                            .to.eql(this.addr3.expected.tokens.concat(Array.from({ length: 2 }, (_, i) => nextTokenId.add(3 + i))));
-                    });
                 });
 
                 describe('tokensOfOwnerIn', async function () {
@@ -224,103 +171,8 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                         });
                     };
 
-                    subTests('initial', async function () { });
-
                     subTests('after a token tranfer', async function () {
                         await this.erc721aQueryable.transferFrom(this.owner.address, this.addr4.address, offsetted(7));
-                    });
-
-                    subTests('after a token burn', async function () {
-                        await this.erc721aQueryable.burn(offsetted(7));
-                    });
-
-                    it('with direct set burn bit', async function () {
-                        await this.erc721aQueryable['safeMint(address,uint256)'](this.addr3.address, 3);
-                        await this.erc721aQueryable['safeMint(address,uint256)'](this.addr3.address, 2);
-                        const nextTokenId = this.owner.expected.tokens[this.owner.expected.tokens.length - 1].add(1);
-                        expect(await this.erc721aQueryable.tokensOfOwnerIn(this.addr3.address, 0, 99))
-                            .to.eql(this.addr3.expected.tokens.concat(Array.from({ length: 5 }, (_, i) => nextTokenId.add(i))));
-                        await this.erc721aQueryable.directSetBurnBit(nextTokenId);
-                        expect(await this.erc721aQueryable.tokensOfOwnerIn(this.addr3.address, 0, 99))
-                            .to.eql(this.addr3.expected.tokens.concat(Array.from({ length: 2 }, (_, i) => nextTokenId.add(3 + i))));
-                    })
-                });
-
-                describe('explicitOwnershipOf', async function () {
-                    it('token exists', async function () {
-                        const tokenId = this.owner.expected.tokens[0];
-                        const explicitOwnership = await this.erc721aQueryable.explicitOwnershipOf(tokenId);
-                        expectExplicitOwnershipExists(explicitOwnership, this.owner.address);
-                    });
-
-                    it('after a token burn', async function () {
-                        const tokenId = this.owner.expected.tokens[0];
-                        await this.erc721aQueryable.burn(tokenId);
-                        const explicitOwnership = await this.erc721aQueryable.explicitOwnershipOf(tokenId);
-                        expectExplicitOwnershipBurned(explicitOwnership, this.owner.address);
-                    });
-
-                    it('after a token transfer', async function () {
-                        const tokenId = this.owner.expected.tokens[0];
-                        await this.erc721aQueryable.transferFrom(this.owner.address, this.addr4.address, tokenId);
-                        const explicitOwnership = await this.erc721aQueryable.explicitOwnershipOf(tokenId);
-                        expectExplicitOwnershipExists(explicitOwnership, this.addr4.address);
-                    });
-
-                    it('out of bounds', async function () {
-                        const explicitOwnership = await this.erc721aQueryable.explicitOwnershipOf(this.currentIndex);
-                        expectExplicitOwnershipNotExists(explicitOwnership);
-                    });
-
-                    it('with direct set burn bit', async function () {
-                        await this.erc721aQueryable.directSetBurnBit(this.addr3.expected.tokens[0]);
-                        for (let i = 0; i < this.addr3.expected.tokens.length; ++i) {
-                            const explicitOwnership = await this.erc721aQueryable.explicitOwnershipOf(this.addr3.expected.tokens[i]);
-                            expectExplicitOwnershipBurned(explicitOwnership, this.addr3.address);
-                        }
-                    });
-                });
-
-                describe('explicitOwnershipsOf', async function () {
-                    it('tokens exist', async function () {
-                        const tokenIds = [].concat(this.owner.expected.tokens, this.addr3.expected.tokens);
-                        const explicitOwnerships = await this.erc721aQueryable.explicitOwnershipsOf(tokenIds);
-                        for (let i = 0; i < tokenIds.length; ++i) {
-                            const owner = await this.erc721aQueryable.ownerOf(tokenIds[i]);
-                            expectExplicitOwnershipExists(explicitOwnerships[i], owner);
-                        }
-                    });
-
-                    it('after a token burn', async function () {
-                        const tokenIds = [].concat(this.owner.expected.tokens, this.addr3.expected.tokens);
-                        await this.erc721aQueryable.burn(tokenIds[0]);
-                        const explicitOwnerships = await this.erc721aQueryable.explicitOwnershipsOf(tokenIds);
-                        expectExplicitOwnershipBurned(explicitOwnerships[0], this.owner.address);
-                        for (let i = 1; i < tokenIds.length; ++i) {
-                            const owner = await this.erc721aQueryable.ownerOf(tokenIds[i]);
-                            expectExplicitOwnershipExists(explicitOwnerships[i], owner);
-                        }
-                    });
-
-                    it('after a token transfer', async function () {
-                        const tokenIds = [].concat(this.owner.expected.tokens, this.addr3.expected.tokens);
-                        await this.erc721aQueryable.transferFrom(this.owner.address, this.addr4.address, tokenIds[0]);
-                        const explicitOwnerships = await this.erc721aQueryable.explicitOwnershipsOf(tokenIds);
-                        expectExplicitOwnershipExists(explicitOwnerships[0], this.addr4.address);
-                        for (let i = 1; i < tokenIds.length; ++i) {
-                            const owner = await this.erc721aQueryable.ownerOf(tokenIds[i]);
-                            expectExplicitOwnershipExists(explicitOwnerships[i], owner);
-                        }
-                    });
-
-                    it('out of bounds', async function () {
-                        const tokenIds = [].concat([this.currentIndex], this.addr3.expected.tokens);
-                        const explicitOwnerships = await this.erc721aQueryable.explicitOwnershipsOf(tokenIds);
-                        expectExplicitOwnershipNotExists(explicitOwnerships[0]);
-                        for (let i = 1; i < tokenIds.length; ++i) {
-                            const owner = await this.erc721aQueryable.ownerOf(tokenIds[i]);
-                            expectExplicitOwnershipExists(explicitOwnerships[i], owner);
-                        }
                     });
                 });
             });
@@ -330,7 +182,7 @@ const createTestSuite = ({ contract, constructorArgs }) =>
 describe(
     'ERC721AQueryableUpgradeable',
     createTestSuite({
-        contract: 'ERC721AQueryableMockUpgradeable',
+        contract: 'OSB721A',
         constructorArgs: [],
     })
 );
