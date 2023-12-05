@@ -38,6 +38,7 @@
     "mocha-multi-reporters": "1.5.1"
   },
   "devDependencies": {
+    "axios": "^1.6.2",
     "csv-writer": "1.6.0",
     "erc721psi": "^0.7.0",
     "hardhat-exposed": "0.3.2",

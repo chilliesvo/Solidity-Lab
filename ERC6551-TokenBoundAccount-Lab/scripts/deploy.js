@@ -1,11 +1,7 @@
 const { ethers } = require("hardhat");
-const {
-    deployProxyAndLogger,
-    contractFactoriesLoader,
-} = require("../utils/deploy.utils");
+const { contractFactoriesLoader, deployAndLogger } = require("../utils/deploy.utils");
 const { blockTimestamp } = require("../utils/utils");
 require("dotenv").config();
-const env = process.env;
 const fs = require("fs");
 
 async function main() {
@@ -20,7 +16,7 @@ async function main() {
     const deployer = addresses[0];
 
     //* Loading contract factory */
-    const contractFactories = await contractFactoriesLoader();
+    const { ShinseiGalverse, CryptoPunk, ERC6551Account, ERC6551Registry } = await contractFactoriesLoader();
 
     //* Deploy contracts */
     const underline = "=".repeat(93);
@@ -38,10 +34,17 @@ async function main() {
         deployer,
     };
 
-    const constructorParams = [];
-    const contractInstance = await deployProxyAndLogger(contractFactories.contract, constructorParams);
-    verifyArguments.contractInstance = contractInstance.address;
-    verifyArguments.contractInstanceVerify = contractInstance.addressVerify;
+    const shinseiGalverse = await deployAndLogger(ShinseiGalverse);
+    verifyArguments.shinseiGalverse = shinseiGalverse.address;
+
+    // const cryptoPunk = await deployAndLogger(CryptoPunk);
+    // verifyArguments.cryptoPunk = cryptoPunk.address;
+
+    // const erc6551Account = await deployAndLogger(ERC6551Account);
+    // verifyArguments.erc6551Account = erc6551Account.address;
+
+    // const erc6551Registry = await deployAndLogger(ERC6551Registry);
+    // verifyArguments.erc6551Registry = erc6551Registry.address;
 
     console.log(underline);
     console.log("DONE");

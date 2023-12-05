@@ -4,7 +4,16 @@ const contracts = require("../contracts.json");
 async function main() {
     const jobs = [
         run("verify:verify", {
-            // address: 
+            address: contracts.cryptoPunk
+        }),
+        run("verify:verify", {
+            address: contracts.shinseiGalverse
+        }),
+        run("verify:verify", {
+            address: contracts.erc6551Account
+        }),
+        run("verify:verify", {
+            address: contracts.erc6551Registry
         }),
     ];
 
