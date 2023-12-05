@@ -11,6 +11,7 @@ node_modules
 /contracts.json
 /contracts-exposed
 /deployed
+/metadata
 
 # Logs
 logs
@@ -30,6 +31,7 @@ lerna-debug.log*
 /test-results
 /test-local
 /contracts-test
+/account-wallet.json
 
 # IDEs and editors
 /.idea

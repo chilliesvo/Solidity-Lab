@@ -45,6 +45,8 @@ const config = {
         goerli: {
             url: process.env.GOERLI_RPC,
             accounts: [process.env.SYSTEM_PRIVATE_KEY],
+            gasPrice: 50000000000,
+
         },
         binance_testnet: {
             url: process.env.BINANCE_TESTNET_RPC,
@@ -93,7 +95,7 @@ const config = {
     contractSizer: {
         alphaSort: true,
         disambiguatePaths: false,
-        runOnCompile: (process.env.REPORT_SIZE === "true") ? true : false,
+        runOnCompile: false,
         strict: true,
     },
     mocha: {
@@ -105,7 +107,7 @@ const config = {
         },
     },
     gasReporter: {
-        enabled: (process.env.REPORT_GAS === "true") ? true : false,
+        enabled: false,
         currency: "USD",
         token: "ETH",
         noColors: true, //optional
