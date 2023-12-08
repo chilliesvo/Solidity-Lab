@@ -98,14 +98,14 @@ const parseEther = (number) => {
     return ethers.utils.parseEther(number);
 };
 
-const sendNativeCoinFrom = async (fromSigner, toAddress, value) => {
+const sendETHFrom = async (fromSigner, toAddress, value) => {
     await fromSigner.sendTransaction({
         to: toAddress,
         value: parseEther(value),
     });
 };
 
-const burnNativeCoinFrom = async (fromSigner, value) => {
+const burnETHFrom = async (fromSigner, value) => {
     await fromSigner.sendTransaction({
         to: ZERO_ADDRESS,
         value: parseEther(value),
@@ -258,8 +258,8 @@ module.exports = {
     genNumbersASC,
     formatEther,
     getBalance,
-    sendNativeCoinFrom,
-    burnNativeCoinFrom,
+    sendETHFrom,
+    burnETHFrom,
     getEstimateGas,
     getCostGasDeployed,
     sleep,

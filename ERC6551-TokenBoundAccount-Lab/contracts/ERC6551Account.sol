@@ -48,7 +48,7 @@ contract ERC6551Account is IERC165, IERC1271, IERC6551Account {
         return _nonce;
     }
 
-    function supportsInterface(bytes4 interfaceId) public pure returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view virtual returns (bool) {
         return (interfaceId == type(IERC165).interfaceId || interfaceId == type(IERC6551Account).interfaceId);
     }
 

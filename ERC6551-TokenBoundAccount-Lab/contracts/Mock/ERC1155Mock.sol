@@ -12,7 +12,6 @@ contract ERC1155Mock is ERC1155("https://ipfs/.json") {
     constructor() {
         name = "ERC1155 Mock";
         symbol = "ERC1155";
-        mint(_msgSender(), 100);
     }
 
     function mint(address _to, uint256 _amount) public {
