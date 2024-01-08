@@ -144,7 +144,7 @@ describe("TokenBoundAccount", () => {
         })
 
         context("Transfer ERC721 from TBA to other", () => {
-            it("Should return caller is not the owner if caller is not owner of TBA token ID", async () => {
+            it("Should return `Not token owner` if caller is not owner of TBA token ID", async () => {
                 //get TBA address
                 const accountAddress = await registryTBA.account(customTBA.address, chainId, erc721.address, tokenId, salt);
 
@@ -153,7 +153,7 @@ describe("TokenBoundAccount", () => {
 
                 //transfer
                 expect(await tba.owner()).to.not.eq(account1.address);
-                await expect(tba.connect(account1).transferNFT(erc721.address, account2.address, 2, 1)).to.revertedWith("caller is not the owner");
+                await expect(tba.connect(account1).transferNFT(erc721.address, account2.address, 2, 1)).to.revertedWith("Not token owner");
             })
 
             it("Should transfer ERC721 to account2 successfully", async () => {
@@ -176,7 +176,7 @@ describe("TokenBoundAccount", () => {
         })
 
         context("Transfer ERC1155 from TBA to other", () => {
-            it("Should return caller is not the owner if caller is not owner of TBA token ID", async () => {
+            it("Should return `Not token owner` if caller is not owner of TBA token ID", async () => {
                 //get TBA address
                 const accountAddress = await registryTBA.account(customTBA.address, chainId, erc721.address, tokenId, salt);
 
@@ -185,7 +185,7 @@ describe("TokenBoundAccount", () => {
 
                 //transfer
                 expect(await tba.owner()).to.not.eq(account1.address);
-                await expect(tba.connect(account1).transferNFT(erc1155.address, account2.address, 1, 5)).to.revertedWith("caller is not the owner");
+                await expect(tba.connect(account1).transferNFT(erc1155.address, account2.address, 1, 5)).to.revertedWith("Not token owner");
             })
 
             it("Should transfer ERC1155 to account2 successfully", async () => {
@@ -209,7 +209,7 @@ describe("TokenBoundAccount", () => {
             })
 
             context("Transfer ERC20 from TBA to other", async () => {
-                it("Should return caller is not the owner if caller is not owner of TBA token ID", async () => {
+                it("Should return `Not token owner` if caller is not owner of TBA token ID", async () => {
                     //get TBA address
                     const accountAddress = await registryTBA.account(customTBA.address, chainId, erc721.address, tokenId, salt);
 
@@ -218,7 +218,7 @@ describe("TokenBoundAccount", () => {
 
                     //transfer
                     expect(await tba.owner()).to.not.eq(account1.address);
-                    await expect(tba.connect(account1).transferToken(erc20.address, account2.address, 1000)).to.revertedWith("caller is not the owner");
+                    await expect(tba.connect(account1).transferToken(erc20.address, account2.address, 1000)).to.revertedWith("Not token owner");
                 })
 
                 it("Should transfer ERC20 to account2 successfully", async () => {

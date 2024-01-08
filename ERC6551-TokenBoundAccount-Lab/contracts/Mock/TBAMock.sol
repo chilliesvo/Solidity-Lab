@@ -22,7 +22,7 @@ contract TBAMock is ERC721Holder, ERC1155Holder, Context, ERC6551Account {
     event TransferToken(address indexed _token, address indexed _to, uint256 _amount);
 
     modifier onlyOwner() {
-        require(_msgSender() == owner(), "caller is not the owner");
+        require(_msgSender() == owner(), "Not token owner");
         _;
     }
 
