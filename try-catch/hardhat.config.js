@@ -39,14 +39,14 @@ const config = {
         hardhat: {
             accounts: { count: 100 },
             allowUnlimitedContractSize: false,
-            blockGasLimit: 500e9,
+            // blockGasLimit: 500e9,
+            blockGasLimit: 1e7,
         },
         // Testnet chains
         goerli: {
             url: process.env.GOERLI_RPC,
             accounts: [process.env.SYSTEM_PRIVATE_KEY],
             gasPrice: 50000000000,
-
         },
         binance_testnet: {
             url: process.env.BINANCE_TESTNET_RPC,

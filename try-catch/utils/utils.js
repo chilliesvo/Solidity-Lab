@@ -77,8 +77,19 @@ const getBalance = async (address) => {
     return ethers.provider.getBalance(address);
 };
 
-const getEstimateGas = async (transactionData) => {
-    return ethers.provider.estimateGas({ data: transactionData });
+const getEstimateGas = async (tx) => {
+    return ethers.provider.estimateGas({ data: tx.data });
+};
+
+const getGasUsed = async (tx) => {
+    if (tx.deployTransaction) tx = await tx.deployTransaction.wait();
+    else tx = await tx.wait();
+    return tx.gasUsed;
+};
+
+const getBlockGasLimit = async () => {
+    const block = await hre.ethers.provider.getBlock("latest");
+    return block.gasLimit;
 };
 
 const getCostGasDeployed = async (transactionData) => {
@@ -272,4 +283,6 @@ module.exports = {
     formatTimestamp,
     expectStruct,
     getEvent,
+    getGasUsed,
+    getBlockGasLimit
 };
