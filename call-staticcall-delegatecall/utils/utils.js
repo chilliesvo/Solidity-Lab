@@ -89,6 +89,11 @@ const getCostGasDeployed = async (transactionData) => {
     return gasUsed.mul(gasPrice);
 };
 
+const getGasUsed = async (tx) => {
+    tx = await tx.wait();
+    return tx.gasUsed;
+};
+
 const formatEther = (weiValue) => {
     return ethers.utils.formatEther(weiValue);
 };
@@ -101,7 +106,7 @@ const parseEther = (number) => {
 const sendETHFrom = async (fromSigner, toAddress, value) => {
     await fromSigner.sendTransaction({
         to: toAddress,
-        value: parseEther(value),
+        value: value,
     });
 };
 
@@ -258,6 +263,7 @@ module.exports = {
     genNumbersASC,
     formatEther,
     getBalance,
+    getGasUsed,
     sendETHFrom,
     burnETHFrom,
     getEstimateGas,
